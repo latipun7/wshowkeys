@@ -109,7 +109,46 @@ static void render_to_cairo(cairo_t *cairo, struct wsk_state *state,
 		if (!name[0]) {
 			special = true;
 			cairo_set_source_u32(cairo, state->specialfg);
-			name = key->name;
+				if (strcmp(key->name, "Return") == 0) {
+					name = "󰌑";
+				} else if (strcmp(key->name, "Tab") == 0 || strcmp(key->name, "ISO_Left_Tab") == 0) {
+					name = "󰌒";
+				} else if (strcmp(key->name, "BackSpace") == 0) {
+					name = "󰭜";
+				} else if (strcmp(key->name, "space") == 0) {
+					name = "󱁐";
+					special = false;
+				} else if (strcmp(key->name, "Control_L") == 0 || strcmp(key->name, "Control_R") == 0) {
+					name = "Ctrl";
+				} else if (strcmp(key->name, "Alt_L") == 0 || strcmp(key->name, "Alt_R") == 0) {
+					name = "Alt";
+				} else if (strcmp(key->name, "Shift_L") == 0 || strcmp(key->name, "Shift_R") == 0) {
+					name = "󰘶";
+				} else if (strcmp(key->name, "Super_L") == 0) {
+					name = "";
+				} else if (strcmp(key->name, "Caps_Lock") == 0) {
+					name = "󰘲";
+				} else if (strcmp(key->name, "Escape") == 0) {
+					name = "󱊷";
+				} else if (strcmp(key->name, "\U000007F0") == 0) {
+					name = "Del";
+				} else if (strcmp(key->name, "Insert") == 0) {
+					name = "Ins";
+				} else if (strcmp(key->name, "Prior") == 0) {
+					name = "PgUp";
+				} else if (strcmp(key->name, "Next") == 0) {
+					name = "PgDn";
+				} else if (strcmp(key->name, "Up") == 0) {
+					name = "↑";
+				} else if (strcmp(key->name, "Down") == 0) {
+					name = "↓";
+				} else if (strcmp(key->name, "Left") == 0) {
+					name = "←";
+				} else if (strcmp(key->name, "Right") == 0) {
+					name = "→";
+				} else {
+					name = key->name;
+				}
 		} else {
 			cairo_set_source_u32(cairo, state->foreground);
 		}
@@ -118,8 +157,8 @@ static void render_to_cairo(cairo_t *cairo, struct wsk_state *state,
 
 		int w, h;
 		if (special) {
-			get_text_size(cairo, state->font, &w, &h, NULL, scale, "%s+", name);
-			pango_printf(cairo, state->font, scale,  "%s+", name);
+			get_text_size(cairo, state->font, &w, &h, NULL, scale, "%s·", name);
+			pango_printf(cairo, state->font, scale,  "%s·", name);
 		} else {
 			get_text_size(cairo, state->font, &w, &h, NULL, scale, "%s", name);
 			pango_printf(cairo, state->font, scale,  "%s", name);
@@ -616,7 +655,7 @@ int main(int argc, char *argv[]) {
 
 	wl_seat_add_listener(state.seat, &wl_seat_listener, &state);
 	wl_display_roundtrip(state.display);
-	
+
 	state.surface = wl_compositor_create_surface(state.compositor);
 	assert(state.surface);
 	wl_surface_add_listener(state.surface, &wl_surface_listener, &state);
